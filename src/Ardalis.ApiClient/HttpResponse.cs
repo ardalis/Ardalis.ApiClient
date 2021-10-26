@@ -16,7 +16,6 @@ namespace Ardalis.ApiClient
     {
       Code = code;
     }
-
     public HttpResponse(string result, HttpStatusCode code)
     {
       Text = result;
