@@ -13,9 +13,9 @@
     <RepositoryUrl>https://github.com/ardalis/Ardalis.ApiClient</RepositoryUrl>
     <PackageTags>api client extensions extension method methods c# .net dotnet</PackageTags>
     <PackageReleaseNotes>Start</PackageReleaseNotes>
-    <Version>0.1.0</Version>
+    <Version>0.1.1</Version>
     <AssemblyName>Ardalis.ApiClient</AssemblyName>
-    <PackageIconUrl>https://user-images.githubusercontent.com/782127/33497760-facf6550-d69c-11e7-94e4-b3856da259a9.png</PackageIconUrl>
+    <PackageIcon>icon.png</PackageIcon>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
