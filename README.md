@@ -17,8 +17,22 @@ Big thanks to [all of the great contributors to this project](https://github.com
 
 ## Getting Started
 
-Install Ardalis.ApiClient from Nuget by `Install-Package Ardalis.ApiClient`  
-On `startup.cs` add this in 
+Install [Ardalis.ApiClient](https://nuget.org/Ardalis.ApiClient) from Nuget using:
+
+(in Visual Studio)
+
+```powershell
+Install-Package Ardalis.ApiClient
+```
+
+(using the dotnet cli)
+
+```powershell
+dotnet add package Ardalis.ApiClient
+```
+
+In `Startup.cs` (or wherever you configure your services) add the following code. Change the base address to be the base URL where your APIs are hosted.
+
 ```csharp
 public void ConfigureServices(IServiceCollection services)
 {
@@ -40,56 +54,58 @@ private static HttpClient HttpClientBuilder()
 }
 ```
 
-Create service file `AddVideoService.cs`
+Create a service file called `AddVideoService.cs` which is designed to call a particular API endpoint:
+
 ```csharp
-  public class AddVideoService : BaseAsyncApiCaller
-    .WithRequest<VideoRequest>
-    .WithResponse<VideoResponse>
+public class AddVideoService : BaseAsyncApiCaller
+  .WithRequest<VideoRequest>
+  .WithResponse<VideoResponse>
+{
+  private readonly HttpService _httpService;
+  private readonly ILogger<AddVideoService> _logger;
+
+  public AddVideoService(HttpService httpService, ILogger<AddVideoService> logger)
   {
-    private readonly HttpService _httpService;
-    private readonly ILogger<AddVideoService> _logger;
+    _httpService = httpService;
+    _logger = logger;
+  }
 
-    public AddVideoService(HttpService httpService, ILogger<AddVideoService> logger)
+  public override async Task<HttpResponse<VideoResponse>> ExecuteAsync(VideoRequest request,
+    CancellationToken cancellationToken = default)
+  {
+    var uri = $"videos/add";
+    try
     {
-      _httpService = httpService;
-      _logger = logger;
+      var response = await _httpService.HttpPostAsync<VideoResponse>(uri, request);
+
+      return response;
     }
-
-    public override async Task<HttpResponse<VideoResponse>> ExecuteAsync(VideoRequest request, CancellationToken cancellationToken = default)
+    catch (Exception exception)
     {
-      var uri = $"videos/add";
-      try
-      {
-        var response = await _httpService.HttpPostAsync<VideoResponse>(uri, request);
-
-        return response;
-      }
-      catch (Exception exception)
-      {
-        _logger.LogError(exception);
-        return HttpResponse<VideoResponse>.FromException(exception.Message);
-      }
+      _logger.LogError(exception);
+      return HttpResponse<VideoResponse>.FromException(exception.Message);
     }
   }
+}
 ```
 
-Call the service in Blazor
+Call the service in Blazor:
+
 ```csharp
-  [Inject]
-  AddVideoService AddVideoService { get; set; }
+[Inject]
+AddVideoService AddVideoService { get; set; }
 
-  private async Task<bool> AddVideoAsync()
+private async Task<bool> AddVideoAsync()
+{
+  VideoRequest videoToAdd = new VideoRequest()
   {
-    VideoRequest videoToAdd = new VideoRequest()
-    {
-      Title = Title,
-      CreatedDate = CreatedDate
-    };
+    Title = Title,
+    CreatedDate = CreatedDate
+  };
 
-    var result = await AddVideoService.ExecuteAsync(videoToAdd);
-    if (result.Code != System.Net.HttpStatusCode.OK) return false;
+  var result = await AddVideoService.ExecuteAsync(videoToAdd);
+  if (result.Code != System.Net.HttpStatusCode.OK) return false;
 
-    return result.Data;	
- }
-
+  return result.Data;	
+}
 ```
