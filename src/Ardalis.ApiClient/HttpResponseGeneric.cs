@@ -4,6 +4,8 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.Json;
+using DevBetter.JsonExtensions;
+using DevBetter.JsonExtensions.Extensions;
 
 namespace Ardalis.ApiClient
 {
@@ -56,10 +58,13 @@ namespace Ardalis.ApiClient
     public HttpResponse(HttpResponseMessage result)
     {
       var textResult = result.Content.ReadAsStringAsync().Result;
-      var data = JsonSerializer.Deserialize<T>(textResult, new JsonSerializerOptions
+      var options = new JsonSerializerOptions
       {
         PropertyNameCaseInsensitive = true
-      });
+      };
+      options.SetMissingMemberHandling(MissingMemberHandling.Ignore);
+
+      var data = JsonSerializer.Deserialize<T>(textResult, options);
 
       Data = data;
       Code = result.StatusCode;
