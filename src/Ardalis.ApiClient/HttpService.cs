@@ -257,6 +257,50 @@ namespace Ardalis.ApiClient
       return HttpResponse<bool>.FromHttpResponseMessage(true, result.StatusCode);
     }
 
+    public async Task<HttpResponse<T>> HttpPatchBytesAsync<T>(string uri, byte[] dataToSend)
+      where T : class
+    {
+      var content = new ByteArrayContent(dataToSend);
+
+      var result = await _httpClient.PatchAsync($"{ApiBaseUrl}{uri}", content);
+      if (!result.IsSuccessStatusCode)
+      {
+        return HttpResponse<T>.FromHttpResponseMessage(result.StatusCode);
+      }
+
+      return HttpResponse<T>.FromHttpResponseMessage(result);
+    }
+
+    public async Task<HttpResponse<bool>> HttpPatchBytesAsync(string uri, byte[] dataToSend)
+    {
+      ByteArrayContent content = null;
+      if (dataToSend != null)
+      {
+        content = new ByteArrayContent(dataToSend);
+      }
+
+      var result = await _httpClient.PatchAsync($"{ApiBaseUrl}{uri}", content);
+      if (!result.IsSuccessStatusCode)
+      {
+        return HttpResponse<bool>.FromHttpResponseMessage(result.StatusCode);
+      }
+
+      return HttpResponse<bool>.FromHttpResponseMessage(true, result.StatusCode);
+    }
+
+    public async Task<bool> HttpPatchBytesWithoutResponseAsync(string uri, byte[] dataToSend)
+    {
+      var content = new ByteArrayContent(dataToSend);
+
+      var result = await _httpClient.PatchAsync($"{ApiBaseUrl}{uri}", content);
+      if (!result.IsSuccessStatusCode)
+      {
+        return false;
+      }
+
+      return true;
+    }
+
     public async Task<HttpResponse<T>> HttpPutBytesAsync<T>(string uri, byte[] dataToSend)
       where T : class
     {

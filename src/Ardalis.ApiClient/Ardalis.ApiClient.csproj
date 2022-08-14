@@ -12,8 +12,8 @@
     <Summary>Api Client methods.</Summary>
     <RepositoryUrl>https://github.com/ardalis/Ardalis.ApiClient</RepositoryUrl>
     <PackageTags>api client extensions extension method methods c# .net dotnet</PackageTags>
-    <PackageReleaseNotes>Start</PackageReleaseNotes>
-    <Version>0.1.5</Version>
+    <PackageReleaseNotes>Patch has been updated to support bytes.</PackageReleaseNotes>
+    <Version>0.1.6</Version>
     <AssemblyName>Ardalis.ApiClient</AssemblyName>
     <PackageIcon>icon.png</PackageIcon>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
