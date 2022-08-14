@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -14,6 +15,8 @@ namespace Ardalis.ApiClient
   {
     private HttpClient _httpClient;
     private string ApiBaseUrl => _httpClient.BaseAddress == null ? string.Empty: _httpClient.BaseAddress.ToString();
+
+    public HttpRequestHeaders Headers => _httpClient.DefaultRequestHeaders;
 
     public HttpService(HttpClient httpClient)
     {
