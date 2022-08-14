@@ -13,14 +13,14 @@ namespace Ardalis.ApiClient
 {
   public class HttpService
   {
-    private HttpClient _httpClient;
-    private string ApiBaseUrl => _httpClient.BaseAddress == null ? string.Empty: _httpClient.BaseAddress.ToString();
+    public HttpClient HttpClient { get; private set; }
+    private string ApiBaseUrl => HttpClient.BaseAddress == null ? string.Empty: HttpClient.BaseAddress.ToString();
 
-    public HttpRequestHeaders Headers => _httpClient.DefaultRequestHeaders;
+    public HttpRequestHeaders RequestHeaders => HttpClient.DefaultRequestHeaders;
 
     public HttpService(HttpClient httpClient)
     {
-      _httpClient = httpClient;
+      HttpClient = httpClient;
     }
 
     public void ResetHttp(string baseUri=null, string accept=null)
@@ -29,7 +29,7 @@ namespace Ardalis.ApiClient
 
       if (baseUri == null)
       {
-        baseUriToAdd = _httpClient.BaseAddress;
+        baseUriToAdd = HttpClient.BaseAddress;
       }
       else
       {
@@ -39,7 +39,7 @@ namespace Ardalis.ApiClient
       var acceptToAdd = accept;
       if (string.IsNullOrEmpty(accept))
       {
-        acceptToAdd = _httpClient.DefaultRequestHeaders.Accept.First()?.ToString();
+        acceptToAdd = HttpClient.DefaultRequestHeaders.Accept.First()?.ToString();
       }
 
       SetBaseUri(acceptToAdd, baseUriToAdd);
@@ -47,7 +47,7 @@ namespace Ardalis.ApiClient
 
     public void ResetBaseUri()
     {
-      var acceptToAdd = _httpClient.DefaultRequestHeaders.Accept.First()?.ToString();
+      var acceptToAdd = HttpClient.DefaultRequestHeaders.Accept.First()?.ToString();
 
       SetBaseUri(acceptToAdd);
     }
@@ -55,37 +55,37 @@ namespace Ardalis.ApiClient
     public void SetBaseUri(string accept, Uri baseUriToAdd=null)
     {
       var token = GetFirstHeader("Authorization");
-      var timeout = _httpClient.Timeout;
+      var timeout = HttpClient.Timeout;
 
-      _httpClient = new HttpClient();
+      HttpClient = new HttpClient();
       if (baseUriToAdd != null)
       {
-        _httpClient.BaseAddress = baseUriToAdd;
+        HttpClient.BaseAddress = baseUriToAdd;
       }      
-      _httpClient.DefaultRequestHeaders.Add("accept", accept);
-      _httpClient.DefaultRequestHeaders.Add("Authorization", token);
-      _httpClient.Timeout = timeout;
+      HttpClient.DefaultRequestHeaders.Add("accept", accept);
+      HttpClient.DefaultRequestHeaders.Add("Authorization", token);
+      HttpClient.Timeout = timeout;
     }
 
     public void AddHeader(string key, string value)
     {
-      if (_httpClient.DefaultRequestHeaders.Contains(key))
+      if (HttpClient.DefaultRequestHeaders.Contains(key))
       {
-        _httpClient.DefaultRequestHeaders.Remove(key);
+        HttpClient.DefaultRequestHeaders.Remove(key);
       }
-      _httpClient.DefaultRequestHeaders.Add(key, value);
+      HttpClient.DefaultRequestHeaders.Add(key, value);
     }
 
     public string GetFirstHeader(string key)
     {
-      var allValues = _httpClient.DefaultRequestHeaders.GetValues(key);
+      var allValues = HttpClient.DefaultRequestHeaders.GetValues(key);
 
       return allValues.FirstOrDefault();
     }
 
     public string[] GetHeader(string key)
     {
-      var allValues = _httpClient.DefaultRequestHeaders.GetValues(key);
+      var allValues = HttpClient.DefaultRequestHeaders.GetValues(key);
 
       return allValues.ToArray();
     }
@@ -94,27 +94,27 @@ namespace Ardalis.ApiClient
     {
       if(timeType == TimeoutType.Seconds)
       {
-        _httpClient.Timeout = TimeSpan.FromSeconds(units);
+        HttpClient.Timeout = TimeSpan.FromSeconds(units);
       } 
       else if(timeType == TimeoutType.Minutes)
       {
-        _httpClient.Timeout = TimeSpan.FromMinutes(units);
+        HttpClient.Timeout = TimeSpan.FromMinutes(units);
       }
       else if (timeType == TimeoutType.Hours)
       {
-        _httpClient.Timeout = TimeSpan.FromHours(units);
+        HttpClient.Timeout = TimeSpan.FromHours(units);
       }   
     }
 
     public void SetAuthorization(string value)
     {
-      _httpClient.DefaultRequestHeaders.Remove("Authorization");
-      _httpClient.DefaultRequestHeaders.Add("Authorization", $"bearer {value}");
+      HttpClient.DefaultRequestHeaders.Remove("Authorization");
+      HttpClient.DefaultRequestHeaders.Add("Authorization", $"bearer {value}");
     }
 
     public void SetDefaultTimeout()
     {
-      _httpClient.Timeout = TimeSpan.FromSeconds(60);
+      HttpClient.Timeout = TimeSpan.FromSeconds(60);
     }
 
     public async Task<HttpResponse<T>> HttpGetAsync<T>(string uri)
@@ -122,7 +122,7 @@ namespace Ardalis.ApiClient
     {
       var uriToSend = $"{ApiBaseUrl}{uri}";
 
-      var result = await _httpClient.GetAsync(uriToSend);
+      var result = await HttpClient.GetAsync(uriToSend);
       if (!result.IsSuccessStatusCode)
       {
         return HttpResponse<T>.FromHttpResponseMessage(result.StatusCode);
@@ -136,7 +136,7 @@ namespace Ardalis.ApiClient
     {
       var uriToSend = $"{ApiBaseUrl}{QueryHelpers.AddQueryString(uri, query)}";      
       
-      var result = await _httpClient.GetAsync(uriToSend);
+      var result = await HttpClient.GetAsync(uriToSend);
       if (!result.IsSuccessStatusCode)
       {
         return HttpResponse<T>.FromHttpResponseMessage(result.StatusCode);
@@ -154,7 +154,7 @@ namespace Ardalis.ApiClient
     public async Task<HttpResponse<T>> HttpDeleteAsync<T>(string uri)
         where T : class
     {
-      var result = await _httpClient.DeleteAsync($"{ApiBaseUrl}{uri}");
+      var result = await HttpClient.DeleteAsync($"{ApiBaseUrl}{uri}");
       if (!result.IsSuccessStatusCode)
       {
         return HttpResponse<T>.FromHttpResponseMessage(result.StatusCode);
@@ -165,7 +165,7 @@ namespace Ardalis.ApiClient
 
     public async Task<HttpResponse<bool>> HttpDeleteAsync(string uri)
     {
-      var result = await _httpClient.DeleteAsync($"{ApiBaseUrl}{uri}");
+      var result = await HttpClient.DeleteAsync($"{ApiBaseUrl}{uri}");
       if (!result.IsSuccessStatusCode)
       {
         return HttpResponse<bool>.FromHttpResponseMessage(result.StatusCode);
@@ -179,7 +179,7 @@ namespace Ardalis.ApiClient
     {
       var content = ToJson(dataToSend);
 
-      var result = await _httpClient.PostAsync($"{ApiBaseUrl}{uri}", content);
+      var result = await HttpClient.PostAsync($"{ApiBaseUrl}{uri}", content);
       if (!result.IsSuccessStatusCode)
       {
         return HttpResponse<T>.FromHttpResponseMessage(result.StatusCode);
@@ -193,7 +193,7 @@ namespace Ardalis.ApiClient
     {
       var uriToSend = QueryHelpers.AddQueryString(uri, query);
 
-      var result = await _httpClient.PostAsync($"{ApiBaseUrl}{uriToSend}", null);
+      var result = await HttpClient.PostAsync($"{ApiBaseUrl}{uriToSend}", null);
       if (!result.IsSuccessStatusCode)
       {
         return HttpResponse<T>.FromHttpResponseMessage(result.StatusCode);
@@ -206,7 +206,7 @@ namespace Ardalis.ApiClient
       where T : class
     {
       var formContent = new FormUrlEncodedContent(ToListKeyValuePair(query).ToArray());
-      var result = await _httpClient.PostAsync($"{ApiBaseUrl}{uri}", formContent);
+      var result = await HttpClient.PostAsync($"{ApiBaseUrl}{uri}", formContent);
       if (!result.IsSuccessStatusCode)
       {
         return HttpResponse<T>.FromHttpResponseMessage(result.StatusCode);
@@ -219,7 +219,7 @@ namespace Ardalis.ApiClient
       where T : class
     {
 
-      var result = await _httpClient.PostAsync($"{ApiBaseUrl}{uri}", new StringContent(body));
+      var result = await HttpClient.PostAsync($"{ApiBaseUrl}{uri}", new StringContent(body));
       if (!result.IsSuccessStatusCode)
       {
         return HttpResponse<T>.FromHttpResponseMessage(result.StatusCode);
@@ -233,7 +233,7 @@ namespace Ardalis.ApiClient
     {
       var content = ToJson(dataToSend);
 
-      var result = await _httpClient.PutAsync($"{ApiBaseUrl}{uri}", content);
+      var result = await HttpClient.PutAsync($"{ApiBaseUrl}{uri}", content);
       if (!result.IsSuccessStatusCode)
       {
         return HttpResponse<T>.FromHttpResponseMessage(result.StatusCode);
@@ -247,7 +247,7 @@ namespace Ardalis.ApiClient
     {
       var content = ToJson(dataToSend);
 
-      var result = await _httpClient.PatchAsync($"{ApiBaseUrl}{uri}", content);
+      var result = await HttpClient.PatchAsync($"{ApiBaseUrl}{uri}", content);
       if (!result.IsSuccessStatusCode)
       {
         return HttpResponse<T>.FromHttpResponseMessage(result.StatusCode);
@@ -260,7 +260,7 @@ namespace Ardalis.ApiClient
     {
       var content = ToJson(dataToSend);
 
-      var result = await _httpClient.PatchAsync($"{ApiBaseUrl}{uri}", content);
+      var result = await HttpClient.PatchAsync($"{ApiBaseUrl}{uri}", content);
       if (!result.IsSuccessStatusCode)
       {
         return HttpResponse<bool>.FromHttpResponseMessage(false, result.StatusCode);
@@ -274,7 +274,7 @@ namespace Ardalis.ApiClient
     {
       var content = new ByteArrayContent(dataToSend);
 
-      var result = await _httpClient.PatchAsync($"{ApiBaseUrl}{uri}", content);
+      var result = await HttpClient.PatchAsync($"{ApiBaseUrl}{uri}", content);
       if (!result.IsSuccessStatusCode)
       {
         return HttpResponse<T>.FromHttpResponseMessage(result.StatusCode);
@@ -291,7 +291,7 @@ namespace Ardalis.ApiClient
         content = new ByteArrayContent(dataToSend);
       }
 
-      var result = await _httpClient.PatchAsync($"{ApiBaseUrl}{uri}", content);
+      var result = await HttpClient.PatchAsync($"{ApiBaseUrl}{uri}", content);
       if (!result.IsSuccessStatusCode)
       {
         return HttpResponse<bool>.FromHttpResponseMessage(result.StatusCode);
@@ -302,7 +302,7 @@ namespace Ardalis.ApiClient
 
     public async Task<HttpResponse<bool>> HttpPatchBytesAsync(string uri, ByteArrayContent content)
     {
-      var result = await _httpClient.PatchAsync($"{ApiBaseUrl}{uri}", content);
+      var result = await HttpClient.PatchAsync($"{ApiBaseUrl}{uri}", content);
       if (!result.IsSuccessStatusCode)
       {
         return HttpResponse<bool>.FromHttpResponseMessage(result.StatusCode);
@@ -315,7 +315,7 @@ namespace Ardalis.ApiClient
     {
       var content = new ByteArrayContent(dataToSend);
 
-      var result = await _httpClient.PatchAsync($"{ApiBaseUrl}{uri}", content);
+      var result = await HttpClient.PatchAsync($"{ApiBaseUrl}{uri}", content);
       if (!result.IsSuccessStatusCode)
       {
         return false;
@@ -326,7 +326,7 @@ namespace Ardalis.ApiClient
 
     public async Task<bool> HttpPatchBytesWithoutResponseAsync(string uri, ByteArrayContent content)
     {
-      var result = await _httpClient.PatchAsync($"{ApiBaseUrl}{uri}", content);
+      var result = await HttpClient.PatchAsync($"{ApiBaseUrl}{uri}", content);
       if (!result.IsSuccessStatusCode)
       {
         return false;
@@ -340,7 +340,7 @@ namespace Ardalis.ApiClient
     {
       var content = new ByteArrayContent(dataToSend);
 
-      var result = await _httpClient.PutAsync($"{ApiBaseUrl}{uri}", content);
+      var result = await HttpClient.PutAsync($"{ApiBaseUrl}{uri}", content);
       if (!result.IsSuccessStatusCode)
       {
         return HttpResponse<T>.FromHttpResponseMessage(result.StatusCode);
@@ -357,7 +357,7 @@ namespace Ardalis.ApiClient
         content = new ByteArrayContent(dataToSend);
       }
 
-      var result = await _httpClient.PutAsync($"{ApiBaseUrl}{uri}", content);
+      var result = await HttpClient.PutAsync($"{ApiBaseUrl}{uri}", content);
       if (!result.IsSuccessStatusCode)
       {
         return HttpResponse<bool>.FromHttpResponseMessage(result.StatusCode);
@@ -370,7 +370,7 @@ namespace Ardalis.ApiClient
     {
       var content = new ByteArrayContent(dataToSend);
 
-      var result = await _httpClient.PutAsync($"{ApiBaseUrl}{uri}", content);
+      var result = await HttpClient.PutAsync($"{ApiBaseUrl}{uri}", content);
       if (!result.IsSuccessStatusCode)
       {
         return false;
