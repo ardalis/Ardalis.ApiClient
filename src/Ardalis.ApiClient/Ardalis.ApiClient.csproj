@@ -13,7 +13,7 @@
     <RepositoryUrl>https://github.com/ardalis/Ardalis.ApiClient</RepositoryUrl>
     <PackageTags>api client extensions extension method methods c# .net dotnet</PackageTags>
     <PackageReleaseNotes>Patch has been updated to support bytes.</PackageReleaseNotes>
-    <Version>0.1.6</Version>
+    <Version>0.1.7</Version>
     <AssemblyName>Ardalis.ApiClient</AssemblyName>
     <PackageIcon>icon.png</PackageIcon>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>

@@ -288,10 +288,32 @@ namespace Ardalis.ApiClient
       return HttpResponse<bool>.FromHttpResponseMessage(true, result.StatusCode);
     }
 
+    public async Task<HttpResponse<bool>> HttpPatchBytesAsync(string uri, ByteArrayContent content)
+    {
+      var result = await _httpClient.PatchAsync($"{ApiBaseUrl}{uri}", content);
+      if (!result.IsSuccessStatusCode)
+      {
+        return HttpResponse<bool>.FromHttpResponseMessage(result.StatusCode);
+      }
+
+      return HttpResponse<bool>.FromHttpResponseMessage(true, result.StatusCode);
+    }
+
     public async Task<bool> HttpPatchBytesWithoutResponseAsync(string uri, byte[] dataToSend)
     {
       var content = new ByteArrayContent(dataToSend);
 
+      var result = await _httpClient.PatchAsync($"{ApiBaseUrl}{uri}", content);
+      if (!result.IsSuccessStatusCode)
+      {
+        return false;
+      }
+
+      return true;
+    }
+
+    public async Task<bool> HttpPatchBytesWithoutResponseAsync(string uri, ByteArrayContent content)
+    {
       var result = await _httpClient.PatchAsync($"{ApiBaseUrl}{uri}", content);
       if (!result.IsSuccessStatusCode)
       {
