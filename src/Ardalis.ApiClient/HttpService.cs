@@ -128,7 +128,10 @@ namespace Ardalis.ApiClient
         return HttpResponse<T>.FromHttpResponseMessage(result.StatusCode);
       }
 
-      return HttpResponse<T>.FromHttpResponseMessage(result);
+      var response = HttpResponse<T>.FromHttpResponseMessage(result);
+      response.SetResponseHeaders(response.Headers);
+
+      return response;
     }
 
     public async Task<HttpResponse<T>> HttpGetAsync<T>(string uri, Dictionary<string, string> query)
@@ -142,7 +145,10 @@ namespace Ardalis.ApiClient
         return HttpResponse<T>.FromHttpResponseMessage(result.StatusCode);
       }
 
-      return HttpResponse<T>.FromHttpResponseMessage(result);
+      var response =  HttpResponse<T>.FromHttpResponseMessage(result);
+      response.SetResponseHeaders(response.Headers);
+
+      return response;
     }
 
     public Task<HttpResponse<T>> HttpDeleteAsync<T>(string uri, object id)
@@ -160,7 +166,10 @@ namespace Ardalis.ApiClient
         return HttpResponse<T>.FromHttpResponseMessage(result.StatusCode);
       }
 
-      return HttpResponse<T>.FromHttpResponseMessage(result);
+      var response = HttpResponse<T>.FromHttpResponseMessage(result);
+      response.SetResponseHeaders(response.Headers);
+
+      return response;
     }
 
     public async Task<HttpResponse<bool>> HttpDeleteAsync(string uri)
@@ -171,7 +180,10 @@ namespace Ardalis.ApiClient
         return HttpResponse<bool>.FromHttpResponseMessage(result.StatusCode);
       }
 
-      return HttpResponse<bool>.FromHttpResponseMessage(true, result.StatusCode, result.Headers);
+      var response = HttpResponse<bool>.FromHttpResponseMessage(true, result.StatusCode, result.Headers);
+      response.SetResponseHeaders(response.Headers);
+
+      return response;
     }
 
     public async Task<HttpResponse<T>> HttpPostAsync<T>(string uri, object dataToSend)
@@ -185,7 +197,10 @@ namespace Ardalis.ApiClient
         return HttpResponse<T>.FromHttpResponseMessage(result.StatusCode);
       }
 
-      return HttpResponse<T>.FromHttpResponseMessage(result);
+      var response = HttpResponse<T>.FromHttpResponseMessage(result);
+      response.SetResponseHeaders(response.Headers);
+
+      return response;
     }
 
     public async Task<HttpResponse<T>> HttpPostByQueryAsync<T>(string uri, Dictionary<string, string> query)
@@ -199,7 +214,10 @@ namespace Ardalis.ApiClient
         return HttpResponse<T>.FromHttpResponseMessage(result.StatusCode);
       }
 
-      return HttpResponse<T>.FromHttpResponseMessage(result);
+      var response = HttpResponse<T>.FromHttpResponseMessage(result);
+      response.SetResponseHeaders(response.Headers);
+
+      return response;
     }
 
     public async Task<HttpResponse<T>> HttpPostByFormAsync<T>(string uri, NameValueCollection query)
@@ -212,7 +230,10 @@ namespace Ardalis.ApiClient
         return HttpResponse<T>.FromHttpResponseMessage(result.StatusCode);
       }
 
-      return HttpResponse<T>.FromHttpResponseMessage(result);
+      var response = HttpResponse<T>.FromHttpResponseMessage(result);
+      response.SetResponseHeaders(response.Headers);
+
+      return response;
     }
 
     public async Task<HttpResponse<T>> HttpPostByStringAsync<T>(string uri, string body)
@@ -225,7 +246,10 @@ namespace Ardalis.ApiClient
         return HttpResponse<T>.FromHttpResponseMessage(result.StatusCode);
       }
 
-      return HttpResponse<T>.FromHttpResponseMessage(result);
+      var response = HttpResponse<T>.FromHttpResponseMessage(result);
+      response.SetResponseHeaders(response.Headers);
+
+      return response;
     }
 
     public async Task<HttpResponse<T>> HttpPutJsonAsync<T>(string uri, object dataToSend)
@@ -239,7 +263,10 @@ namespace Ardalis.ApiClient
         return HttpResponse<T>.FromHttpResponseMessage(result.StatusCode);
       }
 
-      return HttpResponse<T>.FromHttpResponseMessage(result);
+      var response = HttpResponse<T>.FromHttpResponseMessage(result);
+      response.SetResponseHeaders(response.Headers);
+
+      return response;
     }
     
     public async Task<HttpResponse<T>> HttpPatchAsync<T>(string uri, object dataToSend)
@@ -253,7 +280,10 @@ namespace Ardalis.ApiClient
         return HttpResponse<T>.FromHttpResponseMessage(result.StatusCode);
       }
 
-      return HttpResponse<T>.FromHttpResponseMessage(result);
+      var response = HttpResponse<T>.FromHttpResponseMessage(result);
+      response.SetResponseHeaders(response.Headers);
+
+      return response;
     }
     
     public async Task<HttpResponse<bool>> HttpPatchWithoutResponseAsync(string uri, object dataToSend)
@@ -266,7 +296,10 @@ namespace Ardalis.ApiClient
         return HttpResponse<bool>.FromHttpResponseMessage(false, result.StatusCode);
       }
 
-      return HttpResponse<bool>.FromHttpResponseMessage(true, result.StatusCode);
+      var response = HttpResponse<bool>.FromHttpResponseMessage(true, result.StatusCode);
+      response.SetResponseHeaders(response.Headers);
+
+      return response;
     }
 
     public async Task<HttpResponse<T>> HttpPatchBytesAsync<T>(string uri, byte[] dataToSend)
@@ -280,7 +313,10 @@ namespace Ardalis.ApiClient
         return HttpResponse<T>.FromHttpResponseMessage(result.StatusCode);
       }
 
-      return HttpResponse<T>.FromHttpResponseMessage(result);
+      var response = HttpResponse<T>.FromHttpResponseMessage(result);
+      response.SetResponseHeaders(response.Headers);
+
+      return response;
     }
 
     public async Task<HttpResponse<bool>> HttpPatchBytesAsync(string uri, byte[] dataToSend)
@@ -297,7 +333,10 @@ namespace Ardalis.ApiClient
         return HttpResponse<bool>.FromHttpResponseMessage(result.StatusCode);
       }
 
-      return HttpResponse<bool>.FromHttpResponseMessage(true, result.StatusCode);
+      var response = HttpResponse<bool>.FromHttpResponseMessage(true, result.StatusCode);
+      response.SetResponseHeaders(response.Headers);
+
+      return response;
     }
 
     public async Task<HttpResponse<bool>> HttpPatchBytesAsync(string uri, ByteArrayContent content)
@@ -308,7 +347,10 @@ namespace Ardalis.ApiClient
         return HttpResponse<bool>.FromHttpResponseMessage(result.StatusCode);
       }
 
-      return HttpResponse<bool>.FromHttpResponseMessage(true, result.StatusCode);
+      var response = HttpResponse<bool>.FromHttpResponseMessage(true, result.StatusCode);
+      response.SetResponseHeaders(response.Headers);
+
+      return response;
     }
 
     public async Task<bool> HttpPatchBytesWithoutResponseAsync(string uri, byte[] dataToSend)
@@ -346,7 +388,11 @@ namespace Ardalis.ApiClient
         return HttpResponse<T>.FromHttpResponseMessage(result.StatusCode);
       }
 
-      return HttpResponse<T>.FromHttpResponseMessage(result);
+      var response = HttpResponse<T>.FromHttpResponseMessage(result);
+      response.SetResponseHeaders(response.Headers);
+
+      return response;
+
     }
 
     public async Task<HttpResponse<bool>> HttpPutBytesAsync(string uri, byte[] dataToSend)
@@ -363,7 +409,10 @@ namespace Ardalis.ApiClient
         return HttpResponse<bool>.FromHttpResponseMessage(result.StatusCode);
       }
 
-      return HttpResponse<bool>.FromHttpResponseMessage(true, result.StatusCode);
+      var response = HttpResponse<bool>.FromHttpResponseMessage(true, result.StatusCode);
+      response.SetResponseHeaders(response.Headers);
+
+      return response;
     }
 
     public async Task<bool> HttpPutBytesWithoutResponseAsync(string uri, byte[] dataToSend)

@@ -11,6 +11,7 @@ namespace Ardalis.ApiClient
     public string Text { get; }
     public HttpStatusCode Code { get; }
     public Dictionary<string, string[]> Headers { get; } = new Dictionary<string, string[]>();
+    public Dictionary<string, string[]> ResponseHeaders { get; private set; }
 
     public HttpResponse(HttpStatusCode code)
     {
@@ -28,6 +29,11 @@ namespace Ardalis.ApiClient
       {
         Headers.Add(header.Key, header.Value.ToArray());
       }
+    }
+
+    public void SetResponseHeaders(Dictionary<string, string[]> responseHeaders)
+    {
+      ResponseHeaders = responseHeaders;
     }
 
     public string GetFirstHeader(string key)
