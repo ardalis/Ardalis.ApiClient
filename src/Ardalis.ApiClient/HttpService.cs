@@ -129,7 +129,7 @@ namespace Ardalis.ApiClient
       }
 
       var response = HttpResponse<T>.FromHttpResponseMessage(result);
-      response.SetResponseHeaders(response.Headers);
+      response.SetResponseHeaders(result.Headers);
 
       return response;
     }
@@ -146,7 +146,7 @@ namespace Ardalis.ApiClient
       }
 
       var response =  HttpResponse<T>.FromHttpResponseMessage(result);
-      response.SetResponseHeaders(response.Headers);
+      response.SetResponseHeaders(result.Headers);
 
       return response;
     }
@@ -167,7 +167,7 @@ namespace Ardalis.ApiClient
       }
 
       var response = HttpResponse<T>.FromHttpResponseMessage(result);
-      response.SetResponseHeaders(response.Headers);
+      response.SetResponseHeaders(result.Headers);
 
       return response;
     }
@@ -181,7 +181,7 @@ namespace Ardalis.ApiClient
       }
 
       var response = HttpResponse<bool>.FromHttpResponseMessage(true, result.StatusCode, result.Headers);
-      response.SetResponseHeaders(response.Headers);
+      response.SetResponseHeaders(result.Headers);
 
       return response;
     }
@@ -198,7 +198,7 @@ namespace Ardalis.ApiClient
       }
 
       var response = HttpResponse<T>.FromHttpResponseMessage(result);
-      response.SetResponseHeaders(response.Headers);
+      response.SetResponseHeaders(result.Headers);
 
       return response;
     }
@@ -215,7 +215,7 @@ namespace Ardalis.ApiClient
       }
 
       var response = HttpResponse<T>.FromHttpResponseMessage(result);
-      response.SetResponseHeaders(response.Headers);
+      response.SetResponseHeaders(result.Headers);
 
       return response;
     }
@@ -231,7 +231,7 @@ namespace Ardalis.ApiClient
       }
 
       var response = HttpResponse<T>.FromHttpResponseMessage(result);
-      response.SetResponseHeaders(response.Headers);
+      response.SetResponseHeaders(result.Headers);
 
       return response;
     }
@@ -247,7 +247,7 @@ namespace Ardalis.ApiClient
       }
 
       var response = HttpResponse<T>.FromHttpResponseMessage(result);
-      response.SetResponseHeaders(response.Headers);
+      response.SetResponseHeaders(result.Headers);
 
       return response;
     }
@@ -264,7 +264,7 @@ namespace Ardalis.ApiClient
       }
 
       var response = HttpResponse<T>.FromHttpResponseMessage(result);
-      response.SetResponseHeaders(response.Headers);
+      response.SetResponseHeaders(result.Headers);
 
       return response;
     }
@@ -281,7 +281,7 @@ namespace Ardalis.ApiClient
       }
 
       var response = HttpResponse<T>.FromHttpResponseMessage(result);
-      response.SetResponseHeaders(response.Headers);
+      response.SetResponseHeaders(result.Headers);
 
       return response;
     }
@@ -297,7 +297,7 @@ namespace Ardalis.ApiClient
       }
 
       var response = HttpResponse<bool>.FromHttpResponseMessage(true, result.StatusCode);
-      response.SetResponseHeaders(response.Headers);
+      response.SetResponseHeaders(result.Headers);
 
       return response;
     }
@@ -314,7 +314,7 @@ namespace Ardalis.ApiClient
       }
 
       var response = HttpResponse<T>.FromHttpResponseMessage(result);
-      response.SetResponseHeaders(response.Headers);
+      response.SetResponseHeaders(result.Headers);
 
       return response;
     }
@@ -334,7 +334,7 @@ namespace Ardalis.ApiClient
       }
 
       var response = HttpResponse<bool>.FromHttpResponseMessage(true, result.StatusCode);
-      response.SetResponseHeaders(response.Headers);
+      response.SetResponseHeaders(result.Headers);
 
       return response;
     }
@@ -348,7 +348,7 @@ namespace Ardalis.ApiClient
       }
 
       var response = HttpResponse<bool>.FromHttpResponseMessage(true, result.StatusCode);
-      response.SetResponseHeaders(response.Headers);
+      response.SetResponseHeaders(result.Headers);
 
       return response;
     }
@@ -389,7 +389,7 @@ namespace Ardalis.ApiClient
       }
 
       var response = HttpResponse<T>.FromHttpResponseMessage(result);
-      response.SetResponseHeaders(response.Headers);
+      response.SetResponseHeaders(result.Headers);
 
       return response;
 
@@ -410,7 +410,7 @@ namespace Ardalis.ApiClient
       }
 
       var response = HttpResponse<bool>.FromHttpResponseMessage(true, result.StatusCode);
-      response.SetResponseHeaders(response.Headers);
+      response.SetResponseHeaders(result.Headers);
 
       return response;
     }

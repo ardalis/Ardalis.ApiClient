@@ -15,9 +15,9 @@ namespace Ardalis.ApiClient
     public string Text { get; }
     public HttpStatusCode Code { get; }
     public Dictionary<string, string[]> Headers { get; } = new Dictionary<string, string[]>();
-    public Dictionary<string, string[]> ResponseHeaders { get; private set; }
+    public HttpResponseHeaders ResponseHeaders { get; private set; }
 
-    public void SetResponseHeaders(Dictionary<string, string[]> responseHeaders)
+    public void SetResponseHeaders(HttpResponseHeaders responseHeaders)
     {
       ResponseHeaders = responseHeaders;
     }
