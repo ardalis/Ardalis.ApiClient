@@ -64,6 +64,15 @@ namespace Ardalis.ApiClient
       _httpClient.Timeout = timeout;
     }
 
+    public void AddHeader(string key, string value)
+    {
+      if (_httpClient.DefaultRequestHeaders.Contains(key))
+      {
+        _httpClient.DefaultRequestHeaders.Remove(key);
+      }
+      _httpClient.DefaultRequestHeaders.Add(key, value);
+    }
+
     public string GetFirstHeader(string key)
     {
       var allValues = _httpClient.DefaultRequestHeaders.GetValues(key);
