@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Ardalis.ApiClient
 {
@@ -10,6 +11,7 @@ namespace Ardalis.ApiClient
   {
     public string Text { get; }
     public HttpStatusCode Code { get; }
+    public IActionResult ActionResult => new StatusCodeResult((int)Code);
     public Dictionary<string, string[]> Headers { get; } = new Dictionary<string, string[]>();
     public HttpResponseHeaders ResponseHeaders { get; private set; }
 

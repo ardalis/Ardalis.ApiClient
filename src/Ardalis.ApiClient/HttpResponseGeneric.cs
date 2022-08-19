@@ -4,8 +4,10 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.Json;
+using System.Threading.Tasks.Sources;
 using DevBetter.JsonExtensions;
 using DevBetter.JsonExtensions.Extensions;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Ardalis.ApiClient
 {
@@ -14,6 +16,9 @@ namespace Ardalis.ApiClient
     public T Data { get; private set; }
     public string Text { get; }
     public HttpStatusCode Code { get; }
+
+    public IActionResult ActionResult => new StatusCodeResult((int) Code);
+
     public Dictionary<string, string[]> Headers { get; } = new Dictionary<string, string[]>();
     public HttpResponseHeaders ResponseHeaders { get; private set; }
 
