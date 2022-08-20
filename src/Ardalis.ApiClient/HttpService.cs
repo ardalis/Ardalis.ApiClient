@@ -204,9 +204,9 @@ namespace Ardalis.ApiClient
       return response;
     }
 
-    public async Task<bool> HttpPostWithoutResponseAsync(string uri, byte[] dataToSend, CancellationToken cancellationToken = default)
+    public async Task<bool> HttpPostWithoutResponseAsync(string uri, object dataToSend, CancellationToken cancellationToken = default)
     {
-      var content = new ByteArrayContent(dataToSend);
+      var content = ToJson(dataToSend);
 
       var result = await HttpClient.PostAsync($"{ApiBaseUrl}{uri}", content, cancellationToken);
       if (!result.IsSuccessStatusCode)
