@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.WebUtilities;
 
@@ -117,12 +118,12 @@ namespace Ardalis.ApiClient
       HttpClient.Timeout = TimeSpan.FromSeconds(60);
     }
 
-    public async Task<HttpResponse<T>> HttpGetAsync<T>(string uri)
+    public async Task<HttpResponse<T>> HttpGetAsync<T>(string uri, CancellationToken cancellationToken = default)
         where T : class
     {
       var uriToSend = $"{ApiBaseUrl}{uri}";
 
-      var result = await HttpClient.GetAsync(uriToSend);
+      var result = await HttpClient.GetAsync(uriToSend, cancellationToken);
       if (!result.IsSuccessStatusCode)
       {
         return HttpResponse<T>.FromHttpResponseMessage(result.StatusCode);
@@ -134,12 +135,12 @@ namespace Ardalis.ApiClient
       return response;
     }
 
-    public async Task<HttpResponse<T>> HttpGetAsync<T>(string uri, Dictionary<string, string> query)
+    public async Task<HttpResponse<T>> HttpGetAsync<T>(string uri, Dictionary<string, string> query, CancellationToken cancellationToken = default)
         where T : class
     {
       var uriToSend = $"{ApiBaseUrl}{QueryHelpers.AddQueryString(uri, query)}";      
       
-      var result = await HttpClient.GetAsync(uriToSend);
+      var result = await HttpClient.GetAsync(uriToSend, cancellationToken);
       if (!result.IsSuccessStatusCode)
       {
         return HttpResponse<T>.FromHttpResponseMessage(result.StatusCode);
@@ -151,16 +152,16 @@ namespace Ardalis.ApiClient
       return response;
     }
 
-    public Task<HttpResponse<T>> HttpDeleteAsync<T>(string uri, object id)
+    public Task<HttpResponse<T>> HttpDeleteAsync<T>(string uri, object id, CancellationToken cancellationToken = default)
         where T : class
     {
-      return HttpDeleteAsync<T>($"{uri}/{id}");
+      return HttpDeleteAsync<T>($"{uri}/{id}", cancellationToken);
     }
 
-    public async Task<HttpResponse<T>> HttpDeleteAsync<T>(string uri)
+    public async Task<HttpResponse<T>> HttpDeleteAsync<T>(string uri, CancellationToken cancellationToken = default)
         where T : class
     {
-      var result = await HttpClient.DeleteAsync($"{ApiBaseUrl}{uri}");
+      var result = await HttpClient.DeleteAsync($"{ApiBaseUrl}{uri}", cancellationToken);
       if (!result.IsSuccessStatusCode)
       {
         return HttpResponse<T>.FromHttpResponseMessage(result.StatusCode);
@@ -172,9 +173,9 @@ namespace Ardalis.ApiClient
       return response;
     }
 
-    public async Task<HttpResponse<bool>> HttpDeleteAsync(string uri)
+    public async Task<HttpResponse<bool>> HttpDeleteAsync(string uri, CancellationToken cancellationToken = default)
     {
-      var result = await HttpClient.DeleteAsync($"{ApiBaseUrl}{uri}");
+      var result = await HttpClient.DeleteAsync($"{ApiBaseUrl}{uri}", cancellationToken);
       if (!result.IsSuccessStatusCode)
       {
         return HttpResponse<bool>.FromHttpResponseMessage(result.StatusCode);
@@ -186,12 +187,12 @@ namespace Ardalis.ApiClient
       return response;
     }
 
-    public async Task<HttpResponse<T>> HttpPostAsync<T>(string uri, object dataToSend)
+    public async Task<HttpResponse<T>> HttpPostAsync<T>(string uri, object dataToSend, CancellationToken cancellationToken = default)
         where T : class
     {
       var content = ToJson(dataToSend);
 
-      var result = await HttpClient.PostAsync($"{ApiBaseUrl}{uri}", content);
+      var result = await HttpClient.PostAsync($"{ApiBaseUrl}{uri}", content, cancellationToken);
       if (!result.IsSuccessStatusCode)
       {
         return HttpResponse<T>.FromHttpResponseMessage(result.StatusCode);
@@ -203,12 +204,25 @@ namespace Ardalis.ApiClient
       return response;
     }
 
-    public async Task<HttpResponse<T>> HttpPostByQueryAsync<T>(string uri, Dictionary<string, string> query)
+    public async Task<bool> HttpPostWithoutResponseAsync(string uri, byte[] dataToSend, CancellationToken cancellationToken = default)
+    {
+      var content = new ByteArrayContent(dataToSend);
+
+      var result = await HttpClient.PostAsync($"{ApiBaseUrl}{uri}", content, cancellationToken);
+      if (!result.IsSuccessStatusCode)
+      {
+        return false;
+      }
+
+      return true;
+    }
+
+    public async Task<HttpResponse<T>> HttpPostByQueryAsync<T>(string uri, Dictionary<string, string> query, CancellationToken cancellationToken = default)
       where T : class
     {
       var uriToSend = QueryHelpers.AddQueryString(uri, query);
 
-      var result = await HttpClient.PostAsync($"{ApiBaseUrl}{uriToSend}", null);
+      var result = await HttpClient.PostAsync($"{ApiBaseUrl}{uriToSend}", null, cancellationToken);
       if (!result.IsSuccessStatusCode)
       {
         return HttpResponse<T>.FromHttpResponseMessage(result.StatusCode);
@@ -220,11 +234,11 @@ namespace Ardalis.ApiClient
       return response;
     }
 
-    public async Task<HttpResponse<T>> HttpPostByFormAsync<T>(string uri, NameValueCollection query)
+    public async Task<HttpResponse<T>> HttpPostByFormAsync<T>(string uri, NameValueCollection query, CancellationToken cancellationToken = default)
       where T : class
     {
       var formContent = new FormUrlEncodedContent(ToListKeyValuePair(query).ToArray());
-      var result = await HttpClient.PostAsync($"{ApiBaseUrl}{uri}", formContent);
+      var result = await HttpClient.PostAsync($"{ApiBaseUrl}{uri}", formContent, cancellationToken);
       if (!result.IsSuccessStatusCode)
       {
         return HttpResponse<T>.FromHttpResponseMessage(result.StatusCode);
@@ -236,11 +250,11 @@ namespace Ardalis.ApiClient
       return response;
     }
 
-    public async Task<HttpResponse<T>> HttpPostByStringAsync<T>(string uri, string body)
+    public async Task<HttpResponse<T>> HttpPostByStringAsync<T>(string uri, string body, CancellationToken cancellationToken = default)
       where T : class
     {
 
-      var result = await HttpClient.PostAsync($"{ApiBaseUrl}{uri}", new StringContent(body));
+      var result = await HttpClient.PostAsync($"{ApiBaseUrl}{uri}", new StringContent(body), cancellationToken);
       if (!result.IsSuccessStatusCode)
       {
         return HttpResponse<T>.FromHttpResponseMessage(result.StatusCode);
@@ -252,12 +266,12 @@ namespace Ardalis.ApiClient
       return response;
     }
 
-    public async Task<HttpResponse<T>> HttpPutJsonAsync<T>(string uri, object dataToSend)
+    public async Task<HttpResponse<T>> HttpPutJsonAsync<T>(string uri, object dataToSend, CancellationToken cancellationToken = default)
         where T : class
     {
       var content = ToJson(dataToSend);
 
-      var result = await HttpClient.PutAsync($"{ApiBaseUrl}{uri}", content);
+      var result = await HttpClient.PutAsync($"{ApiBaseUrl}{uri}", content, cancellationToken);
       if (!result.IsSuccessStatusCode)
       {
         return HttpResponse<T>.FromHttpResponseMessage(result.StatusCode);
@@ -269,12 +283,12 @@ namespace Ardalis.ApiClient
       return response;
     }
     
-    public async Task<HttpResponse<T>> HttpPatchAsync<T>(string uri, object dataToSend)
+    public async Task<HttpResponse<T>> HttpPatchAsync<T>(string uri, object dataToSend, CancellationToken cancellationToken = default)
         where T : class
     {
       var content = ToJson(dataToSend);
 
-      var result = await HttpClient.PatchAsync($"{ApiBaseUrl}{uri}", content);
+      var result = await HttpClient.PatchAsync($"{ApiBaseUrl}{uri}", content, cancellationToken);
       if (!result.IsSuccessStatusCode)
       {
         return HttpResponse<T>.FromHttpResponseMessage(result.StatusCode);
@@ -286,11 +300,11 @@ namespace Ardalis.ApiClient
       return response;
     }
     
-    public async Task<HttpResponse<bool>> HttpPatchWithoutResponseAsync(string uri, object dataToSend)
+    public async Task<HttpResponse<bool>> HttpPatchWithoutResponseAsync(string uri, object dataToSend, CancellationToken cancellationToken = default)
     {
       var content = ToJson(dataToSend);
 
-      var result = await HttpClient.PatchAsync($"{ApiBaseUrl}{uri}", content);
+      var result = await HttpClient.PatchAsync($"{ApiBaseUrl}{uri}", content, cancellationToken);
       if (!result.IsSuccessStatusCode)
       {
         return HttpResponse<bool>.FromHttpResponseMessage(false, result.StatusCode);
@@ -302,12 +316,12 @@ namespace Ardalis.ApiClient
       return response;
     }
 
-    public async Task<HttpResponse<T>> HttpPatchBytesAsync<T>(string uri, byte[] dataToSend)
+    public async Task<HttpResponse<T>> HttpPatchBytesAsync<T>(string uri, byte[] dataToSend, CancellationToken cancellationToken = default)
       where T : class
     {
       var content = new ByteArrayContent(dataToSend);
 
-      var result = await HttpClient.PatchAsync($"{ApiBaseUrl}{uri}", content);
+      var result = await HttpClient.PatchAsync($"{ApiBaseUrl}{uri}", content, cancellationToken);
       if (!result.IsSuccessStatusCode)
       {
         return HttpResponse<T>.FromHttpResponseMessage(result.StatusCode);
@@ -319,7 +333,7 @@ namespace Ardalis.ApiClient
       return response;
     }
 
-    public async Task<HttpResponse<bool>> HttpPatchBytesAsync(string uri, byte[] dataToSend)
+    public async Task<HttpResponse<bool>> HttpPatchBytesAsync(string uri, byte[] dataToSend, CancellationToken cancellationToken = default)
     {
       ByteArrayContent content = null;
       if (dataToSend != null)
@@ -327,7 +341,7 @@ namespace Ardalis.ApiClient
         content = new ByteArrayContent(dataToSend);
       }
 
-      var result = await HttpClient.PatchAsync($"{ApiBaseUrl}{uri}", content);
+      var result = await HttpClient.PatchAsync($"{ApiBaseUrl}{uri}", content, cancellationToken);
       if (!result.IsSuccessStatusCode)
       {
         return HttpResponse<bool>.FromHttpResponseMessage(result.StatusCode);
@@ -339,9 +353,9 @@ namespace Ardalis.ApiClient
       return response;
     }
 
-    public async Task<HttpResponse<bool>> HttpPatchBytesAsync(string uri, ByteArrayContent content)
+    public async Task<HttpResponse<bool>> HttpPatchBytesAsync(string uri, ByteArrayContent content, CancellationToken cancellationToken = default)
     {
-      var result = await HttpClient.PatchAsync($"{ApiBaseUrl}{uri}", content);
+      var result = await HttpClient.PatchAsync($"{ApiBaseUrl}{uri}", content, cancellationToken);
       if (!result.IsSuccessStatusCode)
       {
         return HttpResponse<bool>.FromHttpResponseMessage(result.StatusCode);
@@ -353,11 +367,11 @@ namespace Ardalis.ApiClient
       return response;
     }
 
-    public async Task<bool> HttpPatchBytesWithoutResponseAsync(string uri, byte[] dataToSend)
+    public async Task<bool> HttpPatchBytesWithoutResponseAsync(string uri, byte[] dataToSend, CancellationToken cancellationToken = default)
     {
       var content = new ByteArrayContent(dataToSend);
 
-      var result = await HttpClient.PatchAsync($"{ApiBaseUrl}{uri}", content);
+      var result = await HttpClient.PatchAsync($"{ApiBaseUrl}{uri}", content, cancellationToken);
       if (!result.IsSuccessStatusCode)
       {
         return false;
@@ -366,9 +380,9 @@ namespace Ardalis.ApiClient
       return true;
     }
 
-    public async Task<bool> HttpPatchBytesWithoutResponseAsync(string uri, ByteArrayContent content)
+    public async Task<bool> HttpPatchBytesWithoutResponseAsync(string uri, ByteArrayContent content, CancellationToken cancellationToken = default)
     {
-      var result = await HttpClient.PatchAsync($"{ApiBaseUrl}{uri}", content);
+      var result = await HttpClient.PatchAsync($"{ApiBaseUrl}{uri}", content, cancellationToken);
       if (!result.IsSuccessStatusCode)
       {
         return false;
@@ -377,12 +391,12 @@ namespace Ardalis.ApiClient
       return true;
     }
 
-    public async Task<HttpResponse<T>> HttpPutBytesAsync<T>(string uri, byte[] dataToSend)
+    public async Task<HttpResponse<T>> HttpPutBytesAsync<T>(string uri, byte[] dataToSend, CancellationToken cancellationToken = default)
       where T : class
     {
       var content = new ByteArrayContent(dataToSend);
 
-      var result = await HttpClient.PutAsync($"{ApiBaseUrl}{uri}", content);
+      var result = await HttpClient.PutAsync($"{ApiBaseUrl}{uri}", content, cancellationToken);
       if (!result.IsSuccessStatusCode)
       {
         return HttpResponse<T>.FromHttpResponseMessage(result.StatusCode);
@@ -395,7 +409,7 @@ namespace Ardalis.ApiClient
 
     }
 
-    public async Task<HttpResponse<bool>> HttpPutBytesAsync(string uri, byte[] dataToSend)
+    public async Task<HttpResponse<bool>> HttpPutBytesAsync(string uri, byte[] dataToSend, CancellationToken cancellationToken = default)
     {
       ByteArrayContent content = null;
       if (dataToSend != null)
@@ -403,7 +417,7 @@ namespace Ardalis.ApiClient
         content = new ByteArrayContent(dataToSend);
       }
 
-      var result = await HttpClient.PutAsync($"{ApiBaseUrl}{uri}", content);
+      var result = await HttpClient.PutAsync($"{ApiBaseUrl}{uri}", content, cancellationToken);
       if (!result.IsSuccessStatusCode)
       {
         return HttpResponse<bool>.FromHttpResponseMessage(result.StatusCode);
@@ -415,11 +429,11 @@ namespace Ardalis.ApiClient
       return response;
     }
 
-    public async Task<bool> HttpPutBytesWithoutResponseAsync(string uri, byte[] dataToSend)
+    public async Task<bool> HttpPutBytesWithoutResponseAsync(string uri, byte[] dataToSend, CancellationToken cancellationToken = default)
     {
       var content = new ByteArrayContent(dataToSend);
 
-      var result = await HttpClient.PutAsync($"{ApiBaseUrl}{uri}", content);
+      var result = await HttpClient.PutAsync($"{ApiBaseUrl}{uri}", content, cancellationToken);
       if (!result.IsSuccessStatusCode)
       {
         return false;
