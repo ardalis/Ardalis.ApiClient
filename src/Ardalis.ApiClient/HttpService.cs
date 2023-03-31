@@ -250,6 +250,21 @@ namespace Ardalis.ApiClient
       return response;
     }
 
+    public async Task<HttpResponse> HttpPostByFormAsync(string uri, NameValueCollection query, CancellationToken cancellationToken = default)
+    {
+      var formContent = new FormUrlEncodedContent(ToListKeyValuePair(query).ToArray());
+      var result = await HttpClient.PostAsync($"{ApiBaseUrl}{uri}", formContent, cancellationToken);
+      if (!result.IsSuccessStatusCode)
+      {
+        return HttpResponse.FromHttpResponseMessage(result.StatusCode);
+      }
+
+      var response = HttpResponse.FromHttpResponseMessage(result);
+      response.SetResponseHeaders(result.Headers);
+
+      return response;
+    }
+
     public async Task<HttpResponse<T>> HttpPostByStringAsync<T>(string uri, string body, CancellationToken cancellationToken = default)
       where T : class
     {
