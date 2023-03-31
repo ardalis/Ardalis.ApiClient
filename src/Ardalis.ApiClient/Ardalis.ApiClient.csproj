@@ -12,8 +12,8 @@
     <Summary>Api Client methods.</Summary>
     <RepositoryUrl>https://github.com/ardalis/Ardalis.ApiClient</RepositoryUrl>
     <PackageTags>api client extensions extension method methods c# .net dotnet</PackageTags>
-    <PackageReleaseNotes>Patch has been updated to support bytes.</PackageReleaseNotes>
-    <Version>0.2.1</Version>
+    <PackageReleaseNotes>HttpPostByFormAsync has been added to support string return.</PackageReleaseNotes>
+    <Version>0.2.2</Version>
     <AssemblyName>Ardalis.ApiClient</AssemblyName>
     <PackageIcon>icon.png</PackageIcon>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
