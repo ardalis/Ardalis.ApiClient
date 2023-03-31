@@ -13,7 +13,7 @@
     <RepositoryUrl>https://github.com/ardalis/Ardalis.ApiClient</RepositoryUrl>
     <PackageTags>api client extensions extension method methods c# .net dotnet</PackageTags>
     <PackageReleaseNotes>HttpPostByFormAsync has been added to support string return.</PackageReleaseNotes>
-    <Version>0.2.2</Version>
+    <Version>0.2.3</Version>
     <AssemblyName>Ardalis.ApiClient</AssemblyName>
     <PackageIcon>icon.png</PackageIcon>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
