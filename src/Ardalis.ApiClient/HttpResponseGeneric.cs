@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -69,15 +70,21 @@ namespace Ardalis.ApiClient
     public HttpResponse(HttpResponseMessage result)
     {
       var textResult = result.Content.ReadAsStringAsync().Result;
-      var options = new JsonSerializerOptions
+
+      if (typeof(T).IsValueType)
       {
-        PropertyNameCaseInsensitive = true
-      };
-      options.SetMissingMemberHandling(MissingMemberHandling.Ignore);
+        Data = textResult.ConvertTo<T>();
+      }
+      else
+      {
+        var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+        options.SetMissingMemberHandling(MissingMemberHandling.Ignore);
 
-      var data = JsonSerializer.Deserialize<T>(textResult, options);
+        var data = JsonSerializer.Deserialize<T>(textResult, options);
 
-      Data = data;
+        Data = data;
+      }
+
       Code = result.StatusCode;
       Text = textResult;
       Headers = new Dictionary<string, string[]>();
